@@ -25,6 +25,7 @@ import org.apache.polaris.immutables.PolarisImmutable;
 import org.apache.polaris.persistence.nosql.api.obj.AbstractObjType;
 import org.apache.polaris.persistence.nosql.api.obj.Obj;
 import org.apache.polaris.persistence.nosql.api.obj.ObjType;
+import org.jspecify.annotations.Nullable;
 
 @PolarisImmutable
 @JsonSerialize(as = ImmutableIndexStripeObj.class)
@@ -42,6 +43,10 @@ public interface IndexStripeObj extends Obj {
   default ObjType type() {
     return TYPE;
   }
+
+  @Nullable
+  @Override
+  String versionToken();
 
   final class IndexStripeObjType extends AbstractObjType<IndexStripeObj> {
     public IndexStripeObjType() {

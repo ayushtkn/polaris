@@ -31,6 +31,7 @@ import org.apache.polaris.persistence.nosql.api.obj.ObjType;
 import org.apache.polaris.persistence.nosql.coretypes.ContainerObj;
 import org.apache.polaris.persistence.nosql.coretypes.ObjBase;
 import org.apache.polaris.persistence.nosql.coretypes.changes.Change;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Holds the state of all catalog entities. The current version of this object is maintained via the
@@ -94,6 +95,10 @@ public interface CatalogStateObj extends ContainerObj {
   default ObjType type() {
     return TYPE;
   }
+
+  @Nullable
+  @Override
+  String versionToken();
 
   static ImmutableCatalogStateObj.Builder builder() {
     return ImmutableCatalogStateObj.builder();

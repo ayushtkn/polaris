@@ -29,6 +29,7 @@ import org.apache.polaris.persistence.nosql.api.obj.Obj;
 import org.apache.polaris.persistence.nosql.api.obj.ObjType;
 import org.apache.polaris.persistence.nosql.authz.api.Acl;
 import org.apache.polaris.persistence.nosql.coretypes.ObjBase;
+import org.jspecify.annotations.Nullable;
 
 /** */
 @PolarisImmutable
@@ -54,6 +55,10 @@ public interface AclObj extends Obj {
   default ObjType type() {
     return TYPE;
   }
+
+  @Nullable
+  @Override
+  String versionToken();
 
   static ImmutableAclObj.Builder builder() {
     return ImmutableAclObj.builder();

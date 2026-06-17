@@ -27,6 +27,7 @@ import org.apache.polaris.persistence.nosql.api.obj.AbstractObjType;
 import org.apache.polaris.persistence.nosql.api.obj.ObjRef;
 import org.apache.polaris.persistence.nosql.api.obj.ObjType;
 import org.apache.polaris.persistence.nosql.coretypes.ContainerObj;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Maintains the mapping of all catalogs by name to {@link CatalogObj}s. The current version of this
@@ -53,6 +54,10 @@ public interface CatalogsObj extends ContainerObj {
   default ObjType type() {
     return TYPE;
   }
+
+  @Nullable
+  @Override
+  String versionToken();
 
   static ImmutableCatalogsObj.Builder builder() {
     return ImmutableCatalogsObj.builder();

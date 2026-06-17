@@ -27,6 +27,7 @@ import org.apache.polaris.persistence.nosql.api.obj.AbstractObjType;
 import org.apache.polaris.persistence.nosql.api.obj.BaseCommitObj;
 import org.apache.polaris.persistence.nosql.api.obj.ObjRef;
 import org.apache.polaris.persistence.nosql.api.obj.ObjType;
+import org.jspecify.annotations.Nullable;
 
 /** Represents the persisted and system-wide consistent state of all realms. */
 @PolarisImmutable
@@ -40,6 +41,10 @@ public interface RealmsStateObj extends BaseCommitObj {
   default ObjType type() {
     return TYPE;
   }
+
+  @Nullable
+  @Override
+  String versionToken();
 
   /**
    * Index of all realms by ID (via {@link IndexKey#key(String)}) to the {@link ObjRef}s referencing

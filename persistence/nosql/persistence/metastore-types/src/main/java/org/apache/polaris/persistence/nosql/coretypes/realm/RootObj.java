@@ -26,6 +26,7 @@ import org.apache.polaris.persistence.nosql.api.obj.AbstractObjType;
 import org.apache.polaris.persistence.nosql.api.obj.BaseCommitObj;
 import org.apache.polaris.persistence.nosql.api.obj.ObjType;
 import org.apache.polaris.persistence.nosql.coretypes.ObjBase;
+import org.jspecify.annotations.Nullable;
 
 // TODO this "root" is a singleton in the realm - is this really necessary?
 @PolarisImmutable
@@ -41,6 +42,10 @@ public interface RootObj extends BaseCommitObj, ObjBase {
   default ObjType type() {
     return TYPE;
   }
+
+  @Nullable
+  @Override
+  String versionToken();
 
   static Builder builder() {
     return ImmutableRootObj.builder();

@@ -33,6 +33,7 @@ import org.apache.polaris.persistence.nosql.api.index.IndexKey;
 import org.apache.polaris.persistence.nosql.api.obj.AbstractObjType;
 import org.apache.polaris.persistence.nosql.api.obj.BaseCommitObj;
 import org.apache.polaris.persistence.nosql.api.obj.ObjType;
+import org.jspecify.annotations.Nullable;
 
 @PolarisImmutable
 @JsonSerialize(as = ImmutablePolicyMappingsObj.class)
@@ -49,6 +50,10 @@ public interface PolicyMappingsObj extends BaseCommitObj {
   default ObjType type() {
     return TYPE;
   }
+
+  @Nullable
+  @Override
+  String versionToken();
 
   static ImmutablePolicyMappingsObj.Builder builder() {
     return ImmutablePolicyMappingsObj.builder();

@@ -26,6 +26,7 @@ import java.util.Optional;
 import org.apache.polaris.immutables.PolarisImmutable;
 import org.apache.polaris.persistence.nosql.api.obj.AbstractObjType;
 import org.apache.polaris.persistence.nosql.api.obj.ObjType;
+import org.jspecify.annotations.Nullable;
 
 @PolarisImmutable
 @JsonSerialize(as = ImmutableCatalogObj.class)
@@ -44,6 +45,10 @@ public interface CatalogObj extends CatalogStorageObj {
   default ObjType type() {
     return TYPE;
   }
+
+  @Nullable
+  @Override
+  String versionToken();
 
   static Builder builder() {
     return ImmutableCatalogObj.builder();

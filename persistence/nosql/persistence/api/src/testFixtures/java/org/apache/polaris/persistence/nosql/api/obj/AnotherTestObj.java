@@ -39,6 +39,10 @@ public interface AnotherTestObj extends Obj {
     return TYPE;
   }
 
+  @Nullable
+  @Override
+  String versionToken();
+
   @Nullable String text();
 
   byte @Nullable [] binary();

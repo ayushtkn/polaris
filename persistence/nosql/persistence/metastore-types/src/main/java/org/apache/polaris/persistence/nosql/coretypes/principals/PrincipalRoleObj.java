@@ -27,6 +27,7 @@ import org.apache.polaris.persistence.nosql.api.obj.AbstractObjType;
 import org.apache.polaris.persistence.nosql.api.obj.ObjType;
 import org.apache.polaris.persistence.nosql.coretypes.ObjBase;
 import org.immutables.value.Value;
+import org.jspecify.annotations.Nullable;
 
 @PolarisImmutable
 @JsonSerialize(as = ImmutablePrincipalRoleObj.class)
@@ -44,6 +45,10 @@ public interface PrincipalRoleObj extends ObjBase {
   default ObjType type() {
     return TYPE;
   }
+
+  @Nullable
+  @Override
+  String versionToken();
 
   static Builder builder() {
     return ImmutablePrincipalRoleObj.builder();

@@ -31,6 +31,7 @@ import org.apache.polaris.immutables.PolarisImmutable;
 import org.apache.polaris.persistence.nosql.api.obj.AbstractObjType;
 import org.apache.polaris.persistence.nosql.api.obj.ObjType;
 import org.apache.polaris.persistence.nosql.coretypes.ObjBase;
+import org.jspecify.annotations.Nullable;
 
 @PolarisImmutable
 @JsonSerialize(as = ImmutableImmediateTaskObj.class)
@@ -43,6 +44,10 @@ public interface ImmediateTaskObj extends ObjBase {
   default ObjType type() {
     return TYPE;
   }
+
+  @Nullable
+  @Override
+  String versionToken();
 
   Optional<AsyncTaskType> taskType();
 

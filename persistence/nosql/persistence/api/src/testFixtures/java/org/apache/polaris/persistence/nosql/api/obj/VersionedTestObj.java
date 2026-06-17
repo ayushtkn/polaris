@@ -37,6 +37,10 @@ public interface VersionedTestObj extends Obj {
     return TYPE;
   }
 
+  @Nullable
+  @Override
+  String versionToken();
+
   static ImmutableVersionedTestObj.Builder builder() {
     return ImmutableVersionedTestObj.builder();
   }

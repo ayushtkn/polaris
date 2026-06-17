@@ -27,6 +27,7 @@ import org.apache.polaris.persistence.nosql.api.obj.AbstractObjType;
 import org.apache.polaris.persistence.nosql.api.obj.ObjRef;
 import org.apache.polaris.persistence.nosql.api.obj.ObjType;
 import org.apache.polaris.persistence.nosql.coretypes.ContainerObj;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Maintains the state of all catalog roles. The current version of this object is maintained via
@@ -54,6 +55,10 @@ public interface CatalogRolesObj extends ContainerObj {
   default ObjType type() {
     return TYPE;
   }
+
+  @Nullable
+  @Override
+  String versionToken();
 
   static ImmutableCatalogRolesObj.Builder builder() {
     return ImmutableCatalogRolesObj.builder();

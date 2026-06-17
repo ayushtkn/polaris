@@ -28,6 +28,7 @@ import org.apache.polaris.persistence.nosql.api.obj.AbstractObjType;
 import org.apache.polaris.persistence.nosql.api.obj.Obj;
 import org.apache.polaris.persistence.nosql.api.obj.ObjType;
 import org.apache.polaris.persistence.nosql.realms.api.RealmDefinition;
+import org.jspecify.annotations.Nullable;
 
 /** Represents the persisted state of a {@link RealmDefinition}. */
 @PolarisImmutable
@@ -40,6 +41,10 @@ public interface RealmObj extends Obj {
   default ObjType type() {
     return TYPE;
   }
+
+  @Nullable
+  @Override
+  String versionToken();
 
   Instant created();
 

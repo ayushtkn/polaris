@@ -42,6 +42,10 @@ public interface SimpleCommitObj extends BaseCommitObj {
     return TYPE;
   }
 
+  @Nullable
+  @Override
+  String versionToken();
+
   /**
    * Record the commit-numbers of all threads in a list, indexed by thread-number. Using a list here
    * allows the correctness checks to work even if the database driver reported an {@linkplain

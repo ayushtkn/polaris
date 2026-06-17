@@ -26,6 +26,7 @@ import org.apache.polaris.persistence.nosql.api.obj.AbstractObjType;
 import org.apache.polaris.persistence.nosql.api.obj.Obj;
 import org.apache.polaris.persistence.nosql.api.obj.ObjType;
 import org.apache.polaris.persistence.nosql.maintenance.api.MaintenanceRunInformation;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Holds information about one maintenance run.
@@ -43,6 +44,10 @@ public interface MaintenanceRunObj extends Obj {
   default ObjType type() {
     return TYPE;
   }
+
+  @Nullable
+  @Override
+  String versionToken();
 
   MaintenanceRunInformation runInformation();
 

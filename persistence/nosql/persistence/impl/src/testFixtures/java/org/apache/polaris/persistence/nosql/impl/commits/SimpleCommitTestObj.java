@@ -24,6 +24,7 @@ import org.apache.polaris.immutables.PolarisImmutable;
 import org.apache.polaris.persistence.nosql.api.obj.AbstractObjType;
 import org.apache.polaris.persistence.nosql.api.obj.BaseCommitObj;
 import org.apache.polaris.persistence.nosql.api.obj.ObjType;
+import org.jspecify.annotations.Nullable;
 
 /** A concrete object */
 @PolarisImmutable
@@ -36,6 +37,10 @@ public interface SimpleCommitTestObj extends BaseCommitObj {
   default ObjType type() {
     return TYPE;
   }
+
+  @Nullable
+  @Override
+  String versionToken();
 
   String payload();
 

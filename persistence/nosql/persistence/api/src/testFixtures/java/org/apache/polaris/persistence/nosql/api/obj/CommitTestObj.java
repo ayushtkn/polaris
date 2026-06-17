@@ -39,6 +39,10 @@ public interface CommitTestObj extends BaseCommitObj {
     return TYPE;
   }
 
+  @Nullable
+  @Override
+  String versionToken();
+
   @Nullable String text();
 
   byte @Nullable [] binary();

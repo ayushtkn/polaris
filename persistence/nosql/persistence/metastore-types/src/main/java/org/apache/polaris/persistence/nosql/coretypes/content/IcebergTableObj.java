@@ -24,6 +24,7 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import org.apache.polaris.immutables.PolarisImmutable;
 import org.apache.polaris.persistence.nosql.api.obj.AbstractObjType;
 import org.apache.polaris.persistence.nosql.api.obj.ObjType;
+import org.jspecify.annotations.Nullable;
 
 @PolarisImmutable
 @JsonSerialize(as = ImmutableIcebergTableObj.class)
@@ -35,6 +36,10 @@ public interface IcebergTableObj extends IcebergTableLikeObj {
   default ObjType type() {
     return TYPE;
   }
+
+  @Nullable
+  @Override
+  String versionToken();
 
   static Builder builder() {
     return ImmutableIcebergTableObj.builder();

@@ -25,6 +25,7 @@ import org.apache.polaris.persistence.nosql.api.obj.AbstractObjType;
 import org.apache.polaris.persistence.nosql.api.obj.BaseCommitObj;
 import org.apache.polaris.persistence.nosql.api.obj.ObjRef;
 import org.apache.polaris.persistence.nosql.api.obj.ObjType;
+import org.jspecify.annotations.Nullable;
 
 @PolarisImmutable
 @JsonSerialize(as = ImmutableMaintenanceRunsObj.class)
@@ -54,6 +55,10 @@ public interface MaintenanceRunsObj extends BaseCommitObj {
   default ObjType type() {
     return TYPE;
   }
+
+  @Nullable
+  @Override
+  String versionToken();
 
   final class MaintenanceRunsObjType extends AbstractObjType<MaintenanceRunsObj> {
     public MaintenanceRunsObjType() {

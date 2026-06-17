@@ -38,6 +38,10 @@ public interface ObjOne extends Obj {
     return TYPE;
   }
 
+  @Nullable
+  @Override
+  String versionToken();
+
   @Nullable String text();
 
   static ImmutableObjOne.Builder builder() {

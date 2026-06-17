@@ -26,6 +26,7 @@ import java.util.Optional;
 import org.apache.polaris.immutables.PolarisImmutable;
 import org.apache.polaris.persistence.nosql.api.obj.AbstractObjType;
 import org.apache.polaris.persistence.nosql.api.obj.ObjType;
+import org.jspecify.annotations.Nullable;
 
 @PolarisImmutable
 @JsonSerialize(as = ImmutableGenericTableObj.class)
@@ -37,6 +38,10 @@ public interface GenericTableObj extends TableLikeObj {
   default ObjType type() {
     return TYPE;
   }
+
+  @Nullable
+  @Override
+  String versionToken();
 
   @JsonInclude(JsonInclude.Include.NON_ABSENT)
   Optional<String> format();

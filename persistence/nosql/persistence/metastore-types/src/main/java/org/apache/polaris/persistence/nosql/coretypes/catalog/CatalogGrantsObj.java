@@ -25,6 +25,7 @@ import org.apache.polaris.persistence.nosql.api.obj.AbstractObjType;
 import org.apache.polaris.persistence.nosql.api.obj.ObjType;
 import org.apache.polaris.persistence.nosql.coretypes.acl.GrantsObj;
 import org.apache.polaris.persistence.nosql.coretypes.realm.RealmGrantsObj;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Maintains the state of all catalog grants. The current version of this object is maintained via
@@ -42,6 +43,10 @@ public interface CatalogGrantsObj extends GrantsObj {
   default ObjType type() {
     return TYPE;
   }
+
+  @Nullable
+  @Override
+  String versionToken();
 
   static ImmutableCatalogGrantsObj.Builder builder() {
     return ImmutableCatalogGrantsObj.builder();

@@ -28,6 +28,7 @@ import org.apache.polaris.persistence.nosql.api.obj.AbstractObjType;
 import org.apache.polaris.persistence.nosql.api.obj.ObjRef;
 import org.apache.polaris.persistence.nosql.api.obj.ObjType;
 import org.apache.polaris.persistence.nosql.coretypes.ContainerObj;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Maintains the mapping of all principals by name to {@link PrincipalObj}s. The current version of
@@ -61,6 +62,10 @@ public interface PrincipalsObj extends ContainerObj {
   default ObjType type() {
     return TYPE;
   }
+
+  @Nullable
+  @Override
+  String versionToken();
 
   final class PrincipalsObjType extends AbstractObjType<PrincipalsObj> {
     public PrincipalsObjType() {

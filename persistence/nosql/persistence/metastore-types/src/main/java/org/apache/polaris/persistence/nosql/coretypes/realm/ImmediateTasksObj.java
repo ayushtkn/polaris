@@ -27,6 +27,7 @@ import org.apache.polaris.persistence.nosql.api.obj.AbstractObjType;
 import org.apache.polaris.persistence.nosql.api.obj.ObjRef;
 import org.apache.polaris.persistence.nosql.api.obj.ObjType;
 import org.apache.polaris.persistence.nosql.coretypes.ContainerObj;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Maintains all {@link ImmediateTaskObj}. The current version of this object is maintained via the
@@ -57,6 +58,10 @@ public interface ImmediateTasksObj extends ContainerObj {
   default ObjType type() {
     return TYPE;
   }
+
+  @Nullable
+  @Override
+  String versionToken();
 
   final class ImmediateTasksObjType extends AbstractObjType<ImmediateTasksObj> {
     public ImmediateTasksObjType() {
