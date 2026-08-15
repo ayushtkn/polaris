@@ -413,12 +413,22 @@ class NoSqlMetaStore extends NonFunctionalBasePersistence {
             updateKeyForCatalogAndEntityType(entityToDrop),
             List.of(new EntityUpdate(EntityUpdate.Operation.DELETE, entityToDrop, cleanup)));
 
-    if (cleanup && PolarisEntityType.POLICY == entityToDrop.getType()) {
-      cleanup = false;
+    var result = results.results().getFirst();
+
+    if (result.isSuccess()) {
+      try {
+        if (entityToDrop.getType() == PolarisEntityType.POLICY) {
+          detachAllPolicyMappings(true, entityToDrop.getCatalogId(), entityToDrop.getId());
+        } else if (PolicyMappingUtil.isValidTargetEntityType(
+            entityToDrop.getType(), entityToDrop.getSubType())) {
+          detachAllPolicyMappings(false, entityToDrop.getCatalogId(), entityToDrop.getId());
+        }
+      } catch (Exception e) {
+        LOGGER.warn("Failed to detach policy mappings for dropped entity", e);
+      }
     }
 
-    var result = results.results().getFirst();
-    if (result.isSuccess() && cleanup) {
+    if (result.isSuccess() && cleanup && entityToDrop.getType() != PolarisEntityType.POLICY) {
       // If cleanup, schedule a cleanup task for the entity.
       // Do this here so that the drop operation and scheduling the cleanup task are
       // transactional.
@@ -449,13 +459,6 @@ class NoSqlMetaStore extends NonFunctionalBasePersistence {
         performEntityMutations(
             new UpdateKeyForCatalogAndEntityType(PolarisEntityType.TASK, 0L, false),
             List.of(new EntityUpdate(CREATE, taskEntity)));
-
-        if (entityToDrop.getType() == PolarisEntityType.POLICY) {
-          detachAllPolicyMappings(true, entityToDrop.getCatalogId(), entityToDrop.getId());
-        } else if (PolicyMappingUtil.isValidTargetEntityType(
-            entityToDrop.getType(), entityToDrop.getSubType())) {
-          detachAllPolicyMappings(false, entityToDrop.getCatalogId(), entityToDrop.getId());
-        }
 
         return new DropEntityResult(taskEntity.getId());
       } catch (Exception e) {

@@ -503,6 +503,25 @@ public abstract class AbstractPolicyCatalogTest {
   }
 
   @Test
+  public void testAttachPolicyOfSameTypeAfterDropWithDetachAll() {
+    icebergCatalog.createNamespace(NS);
+    var target = new PolicyAttachmentTarget(PolicyAttachmentTarget.TypeEnum.CATALOG, List.of());
+
+    policyCatalog.createPolicy(
+        POLICY1, PredefinedPolicyTypes.DATA_COMPACTION.getName(), "test", "{\"enable\": false}");
+    policyCatalog.attachPolicy(POLICY1, target, null);
+    policyCatalog.dropPolicy(POLICY1, true);
+
+    // Dropping with detach-all must remove the mapping, so another policy of the same inheritable
+    // type can be attached to the same target.
+    policyCatalog.createPolicy(
+        POLICY2, PredefinedPolicyTypes.DATA_COMPACTION.getName(), "test", "{\"enable\": true}");
+    policyCatalog.attachPolicy(POLICY2, target, null);
+
+    assertThat(policyCatalog.getApplicablePolicies(null, null, null)).hasSize(1);
+  }
+
+  @Test
   public void testDropPolicyNotExist() {
     icebergCatalog.createNamespace(NS);
 
