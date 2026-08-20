@@ -70,6 +70,33 @@ public class StorageUtilTest {
   }
 
   @Test
+  public void getLocationsUsedByTableWithEquivalentLocations() {
+    var dataPath = IcebergTableLikeEntity.USER_SPECIFIED_WRITE_DATA_LOCATION_KEY;
+
+    // Locations that are spelled differently but denote the same location must not cancel each
+    // other out; one of them has to survive.
+    Assertions.assertThat(StorageUtil.getLocationsUsedByTable("/foo", Map.of(dataPath, "/foo/")))
+        .hasSize(1);
+    Assertions.assertThat(
+            StorageUtil.getLocationsUsedByTable(
+                "s3://bucket/db/t1", Map.of(dataPath, "s3://bucket/db/t1/")))
+        .hasSize(1);
+    Assertions.assertThat(
+            StorageUtil.getLocationsUsedByTable(
+                "s3://bucket/db/t1", Map.of(dataPath, "s3a://bucket/db/t1")))
+        .hasSize(1);
+    Assertions.assertThat(
+            StorageUtil.getLocationsUsedByTable("file:/tmp/x", Map.of(dataPath, "file:///tmp/x")))
+        .hasSize(1);
+
+    // A genuine child is still reduced away, leaving the parent.
+    Assertions.assertThat(
+            StorageUtil.getLocationsUsedByTable(
+                "s3://bucket/db/t1", Map.of(dataPath, "s3://bucket/db/t1/data")))
+        .containsExactly("s3://bucket/db/t1");
+  }
+
+  @Test
   public void getLocationsUsedByTable() {
     Assertions.assertThat(StorageUtil.getLocationsUsedByTable(null, Map.of())).isEmpty();
     Assertions.assertThat(StorageUtil.getLocationsUsedByTable("", Map.of())).isNotEmpty();

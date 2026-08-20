@@ -43,6 +43,7 @@ import org.apache.polaris.core.admin.model.CatalogProperties;
 import org.apache.polaris.core.admin.model.CreateCatalogRequest;
 import org.apache.polaris.core.admin.model.FileStorageConfigInfo;
 import org.apache.polaris.core.admin.model.StorageConfigInfo;
+import org.apache.polaris.core.entity.table.IcebergTableLikeEntity;
 import org.apache.polaris.service.TestServices;
 import org.apache.polaris.service.catalog.common.LocationUtils;
 import org.apache.polaris.service.types.CreateGenericTableRequest;
@@ -68,19 +69,24 @@ public class IcebergOverlappingTableTest {
 
   /** Attempt to create a table at a given location, and return the response code */
   private int createTable(TestServices services, String location) {
-    CreateTableRequest createTableRequest =
+    return createTable(services, location, Map.of());
+  }
+
+  /** Attempt to create a table at a location with extra properties, and return the response code */
+  private int createTable(TestServices services, String location, Map<String, String> properties) {
+    CreateTableRequest.Builder builder =
         CreateTableRequest.builder()
             .withName(getTableName())
             .withLocation(location)
-            .withSchema(SCHEMA)
-            .build();
+            .withSchema(SCHEMA);
+    properties.forEach(builder::setProperty);
     try (Response response =
         services
             .restApi()
             .createTable(
                 catalog,
                 namespace,
-                createTableRequest,
+                builder.build(),
                 null,
                 IDEMPOTENCY_KEY,
                 services.realmContext(),
@@ -89,6 +95,39 @@ public class IcebergOverlappingTableTest {
     } catch (ForbiddenException e) {
       return Response.Status.FORBIDDEN.getStatusCode();
     }
+  }
+
+  @Test
+  @DisplayName("Overlap is detected when write.data.path repeats the table location")
+  void testOverlapWithEquivalentWriteDataPath(@TempDir Path tempDir) {
+    TestServices services =
+        TestServices.builder()
+            .config(
+                Map.of(
+                    "ALLOW_UNSTRUCTURED_TABLE_LOCATION", "true",
+                    "ALLOW_TABLE_LOCATION_OVERLAP", "false",
+                    "ALLOW_INSECURE_STORAGE_TYPES", "true",
+                    "SUPPORTED_CATALOG_STORAGE_TYPES", List.of("FILE", "S3")))
+            .build();
+
+    String baseLocation = tempDir.toAbsolutePath().toUri().toString();
+    if (baseLocation.endsWith("/")) {
+      baseLocation = baseLocation.substring(0, baseLocation.length() - 1);
+    }
+    createCatalogAndNamespace(services, Map.of(), baseLocation);
+
+    String location = String.format("%s/%s/%s/table_1", baseLocation, catalog, namespace);
+    assertThat(createTable(services, location)).isEqualTo(Response.Status.OK.getStatusCode());
+
+    // A second table at the very same location, whose write.data.path spells that location with a
+    // trailing slash. The two spellings are equivalent, so this still overlaps table_1.
+    assertThat(
+            createTable(
+                services,
+                location,
+                Map.of(
+                    IcebergTableLikeEntity.USER_SPECIFIED_WRITE_DATA_LOCATION_KEY, location + "/")))
+        .isEqualTo(Response.Status.FORBIDDEN.getStatusCode());
   }
 
   private int createGenericTable(TestServices services, String location) {

@@ -49,6 +49,7 @@ import org.apache.polaris.core.config.RealmConfig;
 import org.apache.polaris.core.context.CallContext;
 import org.apache.polaris.core.entity.CatalogEntity;
 import org.apache.polaris.core.entity.PolarisEntity;
+import org.apache.polaris.core.entity.table.IcebergTableLikeEntity;
 import org.apache.polaris.core.identity.provider.ServiceIdentityProvider;
 import org.apache.polaris.core.persistence.MetaStoreManagerFactory;
 import org.apache.polaris.core.persistence.PolarisMetaStoreManager;
@@ -333,6 +334,33 @@ public abstract class AbstractLocalIcebergCatalogOverlapTest {
             () -> catalog().buildTable(siblingTable, SCHEMA).withLocation(siblingLoc).create())
         .isInstanceOf(ForbiddenException.class)
         .hasMessageContaining("Unable to create entity at location")
+        .hasMessageContaining("conflicts with existing table or namespace");
+  }
+
+  @Test
+  public void testOverlapWhenWriteDataPathUsesSchemeAlias() {
+    Namespace ns = Namespace.of("ns-for-scheme-alias-overlap");
+    catalog().createNamespace(ns);
+
+    String location = STORAGE_LOCATION + "/scheme-alias/table";
+    catalog()
+        .buildTable(TableIdentifier.of(ns, "scheme-alias-first"), SCHEMA)
+        .withLocation(location)
+        .create();
+
+    // Engines such as Spark commonly address the same bucket through the s3a scheme. A second
+    // table at the very same location, whose write.data.path spells it that way, still overlaps.
+    TableIdentifier second = TableIdentifier.of(ns, "scheme-alias-second");
+    assertThatThrownBy(
+            () ->
+                catalog()
+                    .buildTable(second, SCHEMA)
+                    .withLocation(location)
+                    .withProperty(
+                        IcebergTableLikeEntity.USER_SPECIFIED_WRITE_DATA_LOCATION_KEY,
+                        location.replaceFirst("^s3://", "s3a://"))
+                    .create())
+        .isInstanceOf(ForbiddenException.class)
         .hasMessageContaining("conflicts with existing table or namespace");
   }
 }

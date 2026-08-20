@@ -88,6 +88,10 @@ public class StorageUtil {
     HashSet<String> result = new HashSet<>(locationStrings);
 
     for (String potentialParent : locationStrings) {
+      if (!result.contains(potentialParent)) {
+        // Already removed as redundant itself, so it must not remove equivalent locations.
+        continue;
+      }
       StorageLocation potentialParentLocation = StorageLocation.of(potentialParent);
       for (String potentialChild : locationStrings) {
         if (!potentialParent.equals(potentialChild)) {
