@@ -59,7 +59,7 @@ jobs:
   codeql:
     name: CodeQL Analyze
     if: github.repository_owner == 'apache'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     permissions:
       contents: read
       security-events: write
