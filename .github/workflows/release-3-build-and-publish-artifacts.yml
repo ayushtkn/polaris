@@ -31,7 +31,7 @@ on:
 jobs:
   prerequisite-checks:
     name: Prerequisite Checks
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     permissions:
       contents: read
     outputs:
@@ -46,9 +46,6 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-
-      - name: Setup test environment
-        uses: ./.github/actions/setup-test-env
 
       - name: Set up environment variables
         id: set-outputs
@@ -640,7 +637,7 @@ jobs:
 
   generate-release-email:
     name: Generate Release Email Body
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     needs:
       - prerequisite-checks
       - build-and-publish-artifacts
@@ -662,9 +659,6 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-
-      - name: Setup test environment
-        uses: ./.github/actions/setup-test-env
 
       - name: Set up environment variables
         run: |
