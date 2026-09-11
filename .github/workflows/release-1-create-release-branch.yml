@@ -35,7 +35,7 @@ on:
 jobs:
   create-release-branch:
     name: Release - 1 - Create Release Branch
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     permissions:
       contents: write
 
@@ -47,9 +47,6 @@ jobs:
           fetch-depth: 0
           # Use a token with write permissions - persist-credentials is required for git push
           token: ${{ secrets.GITHUB_TOKEN }} # zizmor: ignore[secrets-outside-env]
-
-      - name: Setup test environment
-        uses: ./.github/actions/setup-test-env
 
       - name: Set up environment variables
         env:
