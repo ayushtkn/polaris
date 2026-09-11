@@ -640,10 +640,6 @@ jobs:
     runs-on: ubuntu-slim
     needs:
       - prerequisite-checks
-      - build-and-publish-artifacts
-      - build-docker
-      - build-and-stage-helm-chart
-      - publish-python-client-rc
     permissions:
       contents: read
     env:
@@ -651,7 +647,7 @@ jobs:
       git_tag: ${{ needs.prerequisite-checks.outputs.git_tag }}
       version_without_rc: ${{ needs.prerequisite-checks.outputs.version_without_rc }}
       rc_number: ${{ needs.prerequisite-checks.outputs.rc_number }}
-      staging_repository_id: ${{ needs.build-and-publish-artifacts.outputs.staging_repository_id }}
+      staging_repository_id: "orgapachepolaris-0000"
 
     steps:
       - name: Checkout repository

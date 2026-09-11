@@ -51,22 +51,22 @@ jobs:
           persist-credentials: false
       # The CLI rather than zizmor-action, which shells out to docker and so cannot run here.
       - name: Set up uv
-        if: github.repository_owner == 'apache'
+        if: github.repository_owner == 'ayushtkn'
         uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
         with:
           enable-cache: false # a cache here is writable from pull_request runs of this workflow
       - name: Run Zizmor (annotations)
-        if: github.repository_owner == 'apache' && github.event_name == 'pull_request'
+        if: github.repository_owner == 'ayushtkn' && github.event_name == 'pull_request'
         env:
           GH_TOKEN: ${{ github.token }}
         run: uvx zizmor@${ZIZMOR_VERSION} --persona=regular --format=github -- .
       - name: Run Zizmor (SARIF)
-        if: github.repository_owner == 'apache' && github.event_name != 'pull_request'
+        if: github.repository_owner == 'ayushtkn' && github.event_name != 'pull_request'
         env:
           GH_TOKEN: ${{ github.token }}
         run: uvx zizmor@${ZIZMOR_VERSION} --persona=regular --format=sarif -- . > "${RUNNER_TEMP}/zizmor.sarif"
       - name: Upload SARIF file to GitHub Advanced Security
-        if: github.repository_owner == 'apache' && github.event_name != 'pull_request'
+        if: github.repository_owner == 'ayushtkn' && github.event_name != 'pull_request'
         uses: github/codeql-action/upload-sarif@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4.37.9
         with:
           sarif_file: ${{ runner.temp }}/zizmor.sarif
@@ -74,7 +74,7 @@ jobs:
 
   codeql:
     name: CodeQL Analyze
-    if: github.repository_owner == 'apache'
+    if: github.repository_owner == 'ayushtkn'
     runs-on: ubuntu-slim
     permissions:
       contents: read
