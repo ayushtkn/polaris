@@ -639,7 +639,7 @@ jobs:
     # Potential results for each "needed" job are: `success`, `failure`, `cancelled`, `skipped`.
     # We consider `success` and `skipped` as "ok", `failure` and `cancelled` as "not ok".
     if: ${{ always() }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-slim
     permissions: {}
     steps:
       - env:
