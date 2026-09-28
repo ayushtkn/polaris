@@ -55,6 +55,7 @@ import org.apache.polaris.core.auth.AuthorizationState;
 import org.apache.polaris.core.auth.PolarisAuthorizer;
 import org.apache.polaris.core.auth.PolarisPrincipal;
 import org.apache.polaris.core.catalog.PolarisCatalogHelpers;
+import org.apache.polaris.core.collection.ImmutableAttributeMap;
 import org.apache.polaris.core.config.BehaviorChangeConfiguration;
 import org.apache.polaris.core.config.FeatureConfiguration;
 import org.apache.polaris.core.config.RealmConfig;
@@ -1086,6 +1087,8 @@ public class PolarisAdminServiceTest {
     when(resolutionManifest.getResolvedTopLevelEntity(
             eq(principalName), eq(PolarisEntityType.PRINCIPAL)))
         .thenReturn(wrapper);
+    when(authenticatedPrincipal.getAttributes())
+        .thenReturn(ImmutableAttributeMap.builder().build());
 
     PolarisPrincipalSecrets currentSecrets =
         new PolarisPrincipalSecrets(100L, "test_client", "main_secret");
